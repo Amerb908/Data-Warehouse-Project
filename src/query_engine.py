@@ -43,15 +43,15 @@ def main():
     
     db_params = {
         "host":"localhost",  # or other host if not local
-        "database":"postgres",
+        "database":"User_Information",
         "user":"postgres",
         "password":"12345",
         "port": "5432"  # default PostgreSQL port
     }
     
     queries = [
-        "SELECT * FROM public.people_id;",
-        "SELECT * FROM public.people_id WHERE name = 'Amer Belal';"
+        "SELECT * FROM public.users;",
+        #"SELECT * FROM public.people_id WHERE id < 2;"
     ]
     
     threads = []
