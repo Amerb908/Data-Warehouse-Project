@@ -1,69 +1,45 @@
-# implementing a query engine that can retrieve data concurrent to other queries running should be
-# something you can at least design and implement a piece of.
+#Implementing a query engine using BigQuery from Google Cloud
 import psycopg2
 from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
-import threading
 
+# Function to connect to the PostgreSQL database
+class Connection:
+    def connect_db():
+        return psycopg2.connect(
+            dbname="User_Information", 
+            user="postgres", 
+            password="Momnoor9696@!", 
+            host="localhost", 
+            port="5432"
+        )
 
-class DatabaseConnection:
-
-    def __init__(self, host, database, user, password, port):
-        
-        self.connection = psycopg2.connect(
-                database=database,
-                user=user,
-                password=password,
-                host=host,
-                port=port
-            )
-        self.connection.autocommit = True
-
-    def execute_query(self, query):
-        with self.connection.cursor(cursor_factory=RealDictCursor) as cursor:
-            cursor.execute(query)
-            if cursor.description:
-                return cursor.fetchall()
+# Function to execute a query
+def execute_query(query):
+    with Connection.connect_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            if query.strip().upper().startswith("SELECT"):
+                results = cur.fetchall()
+                return results
+            conn.commit()  # Commit for INSERT, UPDATE, DELETE
             return "Query executed successfully."
-    
-    def close(self):
-        self.connection.close()
-        
-def thread_function(db_params, query):
-    db = DatabaseConnection(**db_params)
-    result = db.execute_query(query)
-    if isinstance(result, list):
-        for row in result:
-            print(row)
-    else:
-        print(result)
-    db.close()
-    
-def main():
-    
-    db_params = {
-        "host":"localhost",  # or other host if not local
-        "database":"User_Information",
-        "user":"postgres",
-        "password":"12345",
-        "port": "5432"  # default PostgreSQL port
-    }
-    
-    queries = [
-        "SELECT * FROM public.users;",
-        #"SELECT * FROM public.people_id WHERE id < 2;"
-    ]
-    
-    threads = []
-    
-    for query in queries:
-        # Create a new thread for each query
-        thread = threading.Thread(target=thread_function, args=(db_params, query))
-        threads.append(thread)
-        thread.start()  # Start the thread
-    
-    for thread in threads:
-        thread.join()
-        
-if __name__ == "__main__":
-    main()
+
+# Main function to handle query engine logic
+def query_engine():
+    while True:
+        query = input("Enter your SQL query or 'exit' to quit: ")
+        if query.lower() == 'exit':
+            print("Exiting query engine.")
+            break
+        try:
+            results = execute_query(query)
+            if isinstance(results, list):
+                for row in results:
+                    print(row)
+            else:
+                print(results)
+        except Exception as e:
+            print("An error occurred:", e)
+
+# Run the query engine
+query_engine()
