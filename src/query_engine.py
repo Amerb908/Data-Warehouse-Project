@@ -13,33 +13,39 @@ class Connection:
             port="5432"
         )
 
+class Query:
 # Function to execute a query
-def execute_query(query):
-    with Connection.connect_db() as conn:
-        with conn.cursor() as cur:
-            cur.execute(query)
-            if query.strip().upper().startswith("SELECT"):
-                results = cur.fetchall()
-                return results
-            conn.commit()  # Commit for INSERT, UPDATE, DELETE
-            return "Query executed successfully."
+    def execute_query(query):
+        with Connection.connect_db() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query)
+                if query.strip().upper().startswith("SELECT"):
+                    results = cur.fetchall()
+                    return results
+                conn.commit()  # Commit for INSERT, UPDATE, DELETE
+                return "Query executed successfully."
 
-# Main function to handle query engine logic
-def query_engine():
-    while True:
-        query = input("Enter your SQL query or 'exit' to quit: ")
-        if query.lower() == 'exit':
-            print("Exiting query engine.")
-            break
-        try:
-            results = execute_query(query)
-            if isinstance(results, list):
-                for row in results:
-                    print(row)
-            else:
-                print(results)
-        except Exception as e:
-            print("An error occurred:", e)
+    # Main function to handle query engine logic
+    def query_engine():
+        while True:
+            query = input("Enter your SQL query or 'exit' to quit: ")
+            if query.lower() == 'exit':
+                print("Exiting query engine.")
+                break
+            try:
+                results = Query.execute_query(query)
+                if isinstance(results, list):
+                    for row in results:
+                        print(row)
+                else:
+                    print(results)
+            except Exception as e:
+                print("An error occurred:", e)
 
+def main():
 # Run the query engine
-query_engine()
+    Query.query_engine()
+
+
+if __name__ == "__main__":
+    main()
