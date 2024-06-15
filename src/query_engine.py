@@ -6,9 +6,9 @@ class Connection:
     @staticmethod
     def connect_db():
         return psycopg2.connect(
-            dbname="User_Information", 
+            dbname="demo", 
             user="postgres", 
-            password="Momnoor9696@!", 
+            password="", 
             host="localhost", 
             port="5432"
         )
