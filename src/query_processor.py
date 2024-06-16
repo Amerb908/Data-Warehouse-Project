@@ -2,16 +2,9 @@
 import psycopg2
 from psycopg2 import sql
 
+from connection import Connection
+
 # Function to connect to the PostgreSQL database
-class Connection:
-    def connect_db():
-        return psycopg2.connect(
-            dbname="User_Information", 
-            user="postgres", 
-            password="Momnoor9696@!", 
-            host="localhost", 
-            port="5432"
-        )
 
 class Query:
 # Function to execute a query
