@@ -1,11 +1,7 @@
 #Implementing a query engine using BigQuery from Google Cloud
-import psycopg2
-from psycopg2 import sql
-
 from connection import Connection
 
 # Function to connect to the PostgreSQL database
-
 class Query:
 # Function to execute a query
     def execute_query(query):
@@ -19,7 +15,7 @@ class Query:
                 return "Query executed successfully."
 
     # Main function to handle query engine logic
-    @staticmethod
+    
     def query_engine():
         while True:
             query = input("Enter your SQL query or 'exit' to quit: ")

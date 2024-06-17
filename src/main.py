@@ -1,11 +1,10 @@
 
-from query_processor import *
-
+from gui import *
 
 def main():
-    # Run the query engine
-    Query.query_engine()
-
+    root = tk.Tk()
+    app = QueryApp(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
