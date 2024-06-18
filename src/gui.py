@@ -35,7 +35,6 @@ class QueryApp:
         results = Query.execute_query(query)
         if isinstance(results, list):
             for row in results:
-                print('test')
                 self.output_text.insert(tk.END, str(row) + "\n")
         else:
             self.output_text.insert(tk.END, str(results) + "\n")
