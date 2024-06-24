@@ -15,11 +15,11 @@ class QueryApp:
         self.frame.pack(padx=10, pady=10)
 
         # Create the input bar
-        self.input_bar = ttk.Entry(self.frame)
+        self.input_bar = ttk.Entry(self.frame, width = 50)
         self.input_bar.pack(side=tk.LEFT, fill=tk.X, padx=5, pady=5)
 
         # Create the button to run the query engine
-        self.run_button = ttk.Button(self.frame, text="Run", command=self.run_query)
+        self.run_button = ttk.Button(self.frame, text="Search", command=self.run_query)
         self.run_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         # Create a frame for the output
@@ -33,6 +33,7 @@ class QueryApp:
     def run_query(self):
         query = self.input_bar.get()
         results = Query.execute_query(query)
+        self.output_text.delete("1.0", tk.END)
         if isinstance(results, list):
             for row in results:
                 self.output_text.insert(tk.END, str(row) + "\n")

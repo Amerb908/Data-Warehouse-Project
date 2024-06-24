@@ -38,6 +38,6 @@ class Query:
                         print(row)
                 else:
                     print(results)
-            except Exception as e:
-                print("An error occurred:", e)
+            except Exception as error:
+                print("An error occurred:", error)
 
