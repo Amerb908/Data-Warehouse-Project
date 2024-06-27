@@ -1,6 +1,5 @@
 #this is experimental where I would get user info and store it in a csv 
 # and maybe soon store it in a database
-
 import csv
 import os
 
