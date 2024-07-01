@@ -39,4 +39,5 @@ class QueryApp:
                 self.output_text.insert(tk.END, str(row) + "\n")
         else:
             self.output_text.insert(tk.END, str(results) + "\n")
+            
 
