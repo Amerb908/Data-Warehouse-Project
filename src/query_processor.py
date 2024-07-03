@@ -1,8 +1,19 @@
 import psycopg2
 
-# Function to connect to the PostgreSQL database
 class Connection:
+    """
+    This class focuses on the connections to the PostgreSQL database.
+    It uses the psycopg2 library to connect to the PostgreSQL database.
+    """
+
+    @staticmethod
     def connect_db():
+        """
+        Connect to the PostgreSQL database using psycopg2.
+
+        Returns:
+            psycopg2.extensions.connection: A connection object to the PostgreSQL database.
+        """
         return psycopg2.connect(
             dbname="demo", 
             user="postgres", 
@@ -11,9 +22,36 @@ class Connection:
             port="5432"
         )
 
+
 class Query:
-    # Function to execute a query with parameters
+    """
+    A class to handle database queries.
+
+    Methods
+    -------
+    execute_query(query, params=None):
+        Executes a given SQL query with optional parameters.
+        
+    query_engine():
+        Starts the query engine to accept user queries and handle them.
+    """
+
+    @staticmethod
     def execute_query(query, params=None):
+        """
+        Execute a given SQL query with optional parameters.
+
+        Parameters:
+        query (str): The SQL query to be executed.
+        params (tuple, optional): Parameters to be used in the SQL query.
+
+        Returns:
+        list: Results of the query if it is a SELECT statement.
+        str: A success message for non-SELECT queries.
+
+        Raises:
+        Exception: If an error occurs during the execution of the query.
+        """
         with Connection.connect_db() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, params)  # Use the params argument here
@@ -23,8 +61,22 @@ class Query:
                 conn.commit()  # Commit for INSERT, UPDATE, DELETE
                 return "Query executed successfully."
 
-    # Main function to handle query engine logic
+    @staticmethod
     def query_engine():
+        """
+        Start the query engine to accept user SQL queries and handle them.
+
+        The function runs in a loop, prompting the user for a SQL query or
+        the command 'exit' to quit. It handles parameterized queries and
+        prints the results of the queries.
+
+        Example:
+        >>> Query.query_engine()
+        Enter your SQL query or 'exit' to quit: SELECT * FROM table;
+        (1, 'Alice')
+        (2, 'Bob')
+        Enter your SQL query or 'exit' to quit:
+        """
         while True:
             query = input("Enter your SQL query or 'exit' to quit: ")
             if query.lower() == 'exit':
@@ -47,5 +99,3 @@ class Query:
                     print(results)
             except Exception as error:
                 print("An error occurred:", error)
-                
-
