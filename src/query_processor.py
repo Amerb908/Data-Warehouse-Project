@@ -75,13 +75,13 @@ class Query:
         Enter your SQL query or 'exit' to quit: SELECT * FROM table;
         (1, 'Alice')
         (2, 'Bob')
-        Enter your SQL query or 'exit' to quit:
         """
         while True:
             query = input("Enter your SQL query or 'exit' to quit: ")
             if query.lower() == 'exit':
                 print("Exiting query engine, have a nice day :).")
                 break
+            
             # Check if parameters are needed
             if '?' in query:
                 params = input("Enter the parameters for your query, separated by commas: ")
