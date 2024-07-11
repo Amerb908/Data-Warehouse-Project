@@ -1,15 +1,15 @@
 import psycopg2
+from psycopg2 import sql
 
 class Connection:
     """
-    This class focuses on the connections to the PostgreSQL database.
-    It uses the psycopg2 library to connect to the PostgreSQL database.
+    This class handles the connection to the PostgreSQL database using psycopg2.
     """
 
     @staticmethod
     def connect_db():
         """
-        Connect to the PostgreSQL database using psycopg2.
+        Connect to the PostgreSQL database.
 
         Returns:
             psycopg2.extensions.connection: A connection object to the PostgreSQL database.
@@ -52,14 +52,17 @@ class Query:
         Raises:
         Exception: If an error occurs during the execution of the query.
         """
-        with Connection.connect_db() as conn:
-            with conn.cursor() as cur:
-                cur.execute(query, params)  # Use the params argument here
-                if query.strip().upper().startswith("SELECT"):
-                    results = cur.fetchall()
-                    return results
-                conn.commit()  # Commit for INSERT, UPDATE, DELETE
-                return "Query executed successfully."
+        try:
+            conn = Connection.connect_db()
+            with conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    if query.strip().upper().startswith("SELECT"):
+                        return cur.fetchall()
+                    conn.commit()
+                    return "Query executed successfully."
+        except Exception as error:
+            raise Exception(f"An error occurred: {error}")
 
     @staticmethod
     def query_engine():
@@ -79,16 +82,14 @@ class Query:
         while True:
             query = input("Enter your SQL query or 'exit' to quit: ")
             if query.lower() == 'exit':
-                print("Exiting query engine, have a nice day :).")
+                print("Exiting query engine. Have a nice day :).")
                 break
-            
-            # Check if parameters are needed
-            if '?' in query:
-                params = input("Enter the parameters for your query, separated by commas: ")
-                params = params.split(',')  # Split the parameters by comma and pass as tuple
-                params = tuple([param.strip() for param in params])  # Strip spaces
-            else:
-                params = None
+
+            # Handle parameterized queries
+            params = None
+            if '%' in query:
+                params_input = input("Enter the parameters for your query, separated by commas: ")
+                params = tuple(param.strip() for param in params_input.split(','))
 
             try:
                 results = Query.execute_query(query, params)
@@ -98,4 +99,5 @@ class Query:
                 else:
                     print(results)
             except Exception as error:
-                print("An error occurred:", error)
+                print(error)
+
